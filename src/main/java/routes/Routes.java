@@ -1,11 +1,10 @@
-package constant;
+package routes;
 
-public final class ApiConstants {
+public class Routes {
 
-    private ApiConstants() {
-        // Prevent object creation
+    private Routes(){
+
     }
-
     public static final String AUTH = "/auth";
     public static final String BOOKING = "/booking";
     public static final String PING = "/ping";
