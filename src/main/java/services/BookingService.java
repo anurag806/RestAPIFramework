@@ -30,4 +30,19 @@ public class BookingService extends BaseService {
             );
         }
     }
+
+    public BookingRequest getBookingRequest(int bookingid) {
+        Response response1 = given().spec(RequestSpecFactory.getRequestSpecification())
+                .pathParam("id", bookingid).log().all()
+                .when().get(Routes.GET_BOOKING);
+
+        if (response1.statusCode() == 200) {
+            return response1.as(BookingRequest.class);
+        } else {
+            throw new IllegalStateException(
+                    "Get Booking failed with status "
+                            + response1.statusCode()
+            );
+        }
+    }
 }
