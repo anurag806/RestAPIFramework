@@ -1,0 +1,33 @@
+package services;
+import io.restassured.response.Response;
+import pojo.BookingRequest;
+import pojo.BookingResponse;
+import routes.Routes;
+import specifications.RequestSpecFactory;
+
+import static io.restassured.RestAssured.given;
+
+public class BookingService extends BaseService {
+
+    public BookingResponse createBooking(BookingRequest bookingRequest) {
+
+        Response response = given()
+                .spec(RequestSpecFactory.getRequestSpecification())
+                .body(bookingRequest)
+                .log().all()
+                .when()
+                .post(Routes.BOOKING);
+
+        System.out.println("STATUS => " + response.statusCode());
+        System.out.println("BODY => " + response.asString());
+
+        // Validate HTTP Status before trying to parse the JSON
+        if (response.getStatusCode() == 200) {
+            return response.as(BookingResponse.class);
+        } else {
+            throw new IllegalStateException(
+                    "API call failed with status " + response.getStatusCode() + ": " + response.asString()
+            );
+        }
+    }
+}
