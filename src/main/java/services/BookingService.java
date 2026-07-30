@@ -6,6 +6,8 @@ import pojo.BookingResponse;
 import routes.Routes;
 import specifications.RequestSpecFactory;
 
+import java.util.Map;
+
 import static io.restassured.RestAssured.given;
 
 public class BookingService extends BaseService {
@@ -62,6 +64,22 @@ public class BookingService extends BaseService {
                             + response.statusCode()
             );
         }
-
     }
+    public  BookingRequest patchBooking(int BookingId, Map<String,Object> Payload){
+        Response response=given().spec(RequestSpecFactory.getRequestSpecification())
+                .pathParam("id",BookingId)
+                .header("Cookie","token="+TokenManager.getToken())
+                .body(Payload).log().all().when().patch(Routes.UPDATE_BOOKING);
+        if (response.statusCode() == 200) {
+            return response.as(BookingRequest.class);
+        }
+        else {
+            throw new IllegalStateException(
+                    "Patch Booking failed with status "
+                            + response.statusCode()
+                            + " Response : "
+                            + response.asString()
+            );
+    }
+}
 }
