@@ -43,4 +43,49 @@ public class CreateBookingTest {
         Assert.assertTrue(response.isDepositpaid());
         Assert.assertEquals(response.getAdditionalneeds(), "Breakfast");
     }
+    @Test(dependsOnMethods = "GetBookingTest")
+    public void updateBookingTest() {
+
+        int bookingId = TestData.getBookingId();
+
+        BookingDates updatedDates = new BookingDates(
+                "2026-12-20",
+                "2026-12-25"
+        );
+
+        BookingRequest updatedRequest = new BookingRequest(
+                "Rahul",
+                "Sharma",
+                5000,
+                false,
+                updatedDates,
+                "Lunch"
+        );
+
+        BookingRequest updatedResponse =
+                bookingService.updateBooking(bookingId, updatedRequest);
+
+        // Validate PUT Response
+        Assert.assertEquals(updatedResponse.getFirstname(), "Rahul");
+        Assert.assertEquals(updatedResponse.getLastname(), "Sharma");
+        Assert.assertEquals(updatedResponse.getTotalprice(), 5000);
+        Assert.assertFalse(updatedResponse.isDepositpaid());
+        Assert.assertEquals(updatedResponse.getBookingdates().getCheckin(), "2026-12-20");
+        Assert.assertEquals(updatedResponse.getBookingdates().getCheckout(), "2026-12-25");
+        Assert.assertEquals(updatedResponse.getAdditionalneeds(), "Lunch");
+
+        // Verify using GET API
+        BookingRequest getResponse = bookingService.getBookingRequest(bookingId);
+
+        Assert.assertEquals(getResponse.getFirstname(), "Rahul");
+        Assert.assertEquals(getResponse.getLastname(), "Sharma");
+        Assert.assertEquals(getResponse.getTotalprice(), 5000);
+        Assert.assertFalse(getResponse.isDepositpaid());
+        Assert.assertEquals(getResponse.getBookingdates().getCheckin(), "2026-12-20");
+        Assert.assertEquals(getResponse.getBookingdates().getCheckout(), "2026-12-25");
+        Assert.assertEquals(getResponse.getAdditionalneeds(), "Lunch");
+
+        System.out.println("Booking Updated Successfully -> " + bookingId);
+    }
+
 }

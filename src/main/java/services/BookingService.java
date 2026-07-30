@@ -1,4 +1,5 @@
 package services;
+import auth.TokenManager;
 import io.restassured.response.Response;
 import pojo.BookingRequest;
 import pojo.BookingResponse;
@@ -44,5 +45,23 @@ public class BookingService extends BaseService {
                             + response1.statusCode()
             );
         }
+    }
+    public BookingRequest updateBooking(int BookingId,BookingRequest bookingRequest) {
+        Response response=given().spec(RequestSpecFactory.getRequestSpecification())
+                .pathParam("id",BookingId)
+                .header("Cookie","token="+ TokenManager.getToken())
+                .body(bookingRequest)
+                .log().all()
+                .when()
+                .put(Routes.UPDATE_BOOKING);
+        if (response.statusCode() == 200) {
+            return response.as(BookingRequest.class);
+        } else {
+            throw new IllegalStateException(
+                    "Get Booking failed with status "
+                            + response.statusCode()
+            );
+        }
+
     }
 }
