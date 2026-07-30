@@ -1,3 +1,4 @@
+import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pojo.BookingDates;
@@ -134,5 +135,23 @@ public class CreateBookingTest {
         Assert.assertEquals(getResponse.getAdditionalneeds(), "Lunch");
 
         System.out.println("Booking Patched Successfully -> " + bookingId);
+    }
+    @Test (dependsOnMethods = "patchBookingTest")
+    public void deleteBookingTest() {
+
+        int bookingId = TestData.getBookingId();
+
+        Response response = bookingService.deleteBooking(bookingId);
+
+        Assert.assertEquals(response.statusCode(), 201);
+
+        System.out.println("Booking Deleted Successfully -> " + bookingId);
+
+        try {
+            bookingService.getBookingRequest(bookingId);
+            Assert.fail("Booking still exists after delete.");
+        } catch (IllegalStateException e) {
+            System.out.println("Booking deleted successfully. GET returned expected error.");
+        }
     }
 }

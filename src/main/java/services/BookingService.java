@@ -82,4 +82,12 @@ public class BookingService extends BaseService {
             );
     }
 }
+public Response deleteBooking(int BookingId){
+        Response response=given().spec(RequestSpecFactory.getRequestSpecification())
+                .header("Cookie","token="+TokenManager.getToken())
+                .pathParam("id",BookingId).log().all().when().delete(Routes.DELETE_BOOKING);
+    System.out.println("STATUS => " + response.statusCode());
+    System.out.println("BODY => " + response.asString());
+    return  response;
+}
 }
