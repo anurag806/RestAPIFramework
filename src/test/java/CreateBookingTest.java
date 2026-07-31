@@ -1,3 +1,4 @@
+import builders.BookingDataBuilder;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -16,21 +17,7 @@ public class CreateBookingTest {
 
     @Test
     public void createBookingTest() {
-
-        BookingDates dates = new BookingDates(
-                "2026-12-10",
-                "2026-12-12"
-        );
-
-        BookingRequest requestPayload = new BookingRequest(
-                "Anurag",
-                "Pandey",
-                1200,
-                true,
-                dates,
-                "Breakfast"
-        );
-
+        BookingRequest requestPayload = BookingDataBuilder.defaultBooking();
         BookingResponse bookingResponse =
                 bookingService.createBooking(requestPayload);
 
@@ -65,21 +52,7 @@ public class CreateBookingTest {
     public void updateBookingTest() {
 
         int bookingId = TestData.getBookingId();
-
-        BookingDates updatedDates = new BookingDates(
-                "2026-12-20",
-                "2026-12-25"
-        );
-
-        BookingRequest updatedRequest = new BookingRequest(
-                "Rahul",
-                "Sharma",
-                5000,
-                false,
-                updatedDates,
-                "Lunch"
-        );
-
+        BookingRequest updatedRequest = BookingDataBuilder.updatedBooking();
         BookingRequest updatedResponse =
                 bookingService.updateBooking(bookingId, updatedRequest);
 
@@ -108,25 +81,21 @@ public class CreateBookingTest {
 
         int bookingId = TestData.getBookingId();
 
-        Map<String, Object> payload = new HashMap<>();
-
-        payload.put("firstname", "Swati");
-        payload.put("lastname", "Shukla");
-        payload.put("totalprice", 7000);
+       Map<String,Object> payload=BookingDataBuilder.patchBookingPayload();
 
         BookingRequest patchResponse =
                 bookingService.patchBooking(bookingId, payload);
 
         Assert.assertEquals(patchResponse.getFirstname(), "Swati");
         Assert.assertEquals(patchResponse.getLastname(), "Shukla");
-        Assert.assertEquals(patchResponse.getTotalprice(), 7000);
+        Assert.assertEquals(patchResponse.getTotalprice(), 5000);
 
         BookingRequest getResponse =
                 bookingService.getBookingRequest(bookingId);
 
         Assert.assertEquals(getResponse.getFirstname(), "Swati");
         Assert.assertEquals(getResponse.getLastname(), "Shukla");
-        Assert.assertEquals(getResponse.getTotalprice(), 7000);
+        Assert.assertEquals(getResponse.getTotalprice(), 5000);
 
         // Fields not patched should remain unchanged
         Assert.assertFalse(getResponse.isDepositpaid());
