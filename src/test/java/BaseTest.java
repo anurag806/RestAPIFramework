@@ -4,8 +4,8 @@ import services.BookingService;
 
 public class BaseTest {
     protected BookingService bookingService;
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setup(){
-        BookingService bookingService = new BookingService();
+        bookingService = new BookingService();
     }
 }

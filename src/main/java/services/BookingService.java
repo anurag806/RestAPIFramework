@@ -1,6 +1,8 @@
 package services;
 import auth.TokenManager;
 import io.restassured.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pojo.BookingRequest;
 import pojo.BookingResponse;
 import routes.Routes;
@@ -11,6 +13,8 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 
 public class BookingService extends BaseService {
+    private static final Logger logger =
+            LogManager.getLogger(BookingService.class);
 
     public BookingResponse createBooking(BookingRequest bookingRequest) {
 
@@ -20,7 +24,7 @@ public class BookingService extends BaseService {
                 .log().all()
                 .when()
                 .post(Routes.BOOKING);
-
+logger.info("booking request created");
         System.out.println("STATUS => " + response.statusCode());
         System.out.println("BODY => " + response.asString());
 
@@ -38,6 +42,7 @@ public class BookingService extends BaseService {
         Response response1 = given().spec(RequestSpecFactory.getRequestSpecification())
                 .pathParam("id", bookingid).log().all()
                 .when().get(Routes.GET_BOOKING);
+        logger.info("booking request getting");
 
         if (response1.statusCode() == 200) {
             return response1.as(BookingRequest.class);
@@ -56,6 +61,7 @@ public class BookingService extends BaseService {
                 .log().all()
                 .when()
                 .put(Routes.UPDATE_BOOKING);
+        logger.info("booking request updating");
         if (response.statusCode() == 200) {
             return response.as(BookingRequest.class);
         } else {
@@ -70,6 +76,7 @@ public class BookingService extends BaseService {
                 .pathParam("id",BookingId)
                 .header("Cookie","token="+TokenManager.getToken())
                 .body(Payload).log().all().when().patch(Routes.UPDATE_BOOKING);
+        logger.info("booking request patching");
         if (response.statusCode() == 200) {
             return response.as(BookingRequest.class);
         }
@@ -86,7 +93,8 @@ public Response deleteBooking(int BookingId){
         Response response=given().spec(RequestSpecFactory.getRequestSpecification())
                 .header("Cookie","token="+TokenManager.getToken())
                 .pathParam("id",BookingId).log().all().when().delete(Routes.DELETE_BOOKING);
-    System.out.println("STATUS => " + response.statusCode());
+    logger.info("booking request deleting");
+        System.out.println("STATUS => " + response.statusCode());
     System.out.println("BODY => " + response.asString());
     return  response;
 }
