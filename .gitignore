@@ -12,7 +12,35 @@ target/
 *.iws
 *.iml
 *.ipr
+# IntelliJ
+.idea/
+*.iml
 
+# Maven
+target/
+
+# Logs
+logs/
+*.log
+
+# Allure
+allure-results/
+allure-report/
+
+# Extent Reports
+test-output/
+reports/
+ExtentReports/
+
+# Screenshots
+screenshots/
+
+# Environment Files
+.env
+
+# OS Files
+.DS_Store
+Thumbs.db
 ### Eclipse ###
 .apt_generated
 .classpath
