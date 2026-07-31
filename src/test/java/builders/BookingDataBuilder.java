@@ -8,20 +8,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookingDataBuilder {
-
-    public static BookingRequest defaultBooking(){
+    private static  Faker faker = new Faker();
+    public static BookingRequest defaultBooking() {
 
         BookingDates bookingDates = new BookingDates(
                 "2026-12-10",
                 "2026-12-12"
         );
+
         BookingRequest bookingRequest = new BookingRequest();
-        bookingRequest.setFirstname("Anurag");
-        bookingRequest.setLastname("pandey");
-        bookingRequest.setTotalprice(5000);
-        bookingRequest.setDepositpaid(true);
-        bookingRequest.setAdditionalneeds("i am winner");
+
+        bookingRequest.setFirstname(faker.name().firstName());
+        bookingRequest.setLastname(faker.name().lastName());
+        bookingRequest.setTotalprice(faker.number().numberBetween(1000, 10000));
+        bookingRequest.setDepositpaid(faker.bool().bool());
         bookingRequest.setBookingdates(bookingDates);
+        bookingRequest.setAdditionalneeds("Breakfast");
+
         return bookingRequest;
     }
     public static BookingRequest updatedBooking() {
@@ -33,20 +36,20 @@ public class BookingDataBuilder {
 
         BookingRequest bookingRequest = new BookingRequest();
 
-        bookingRequest.setFirstname("Rahul");
-        bookingRequest.setLastname("Sharma");
-        bookingRequest.setTotalprice(5000);
-        bookingRequest.setDepositpaid(false);
+        bookingRequest.setFirstname(faker.name().firstName());
+        bookingRequest.setLastname(faker.name().lastName());
+        bookingRequest.setTotalprice(faker.number().numberBetween(1,1000));
+        bookingRequest.setDepositpaid(faker.bool().bool());
         bookingRequest.setBookingdates(bookingDates);
-        bookingRequest.setAdditionalneeds("Lunch");
+        bookingRequest.setAdditionalneeds("lunch");
 
         return bookingRequest;
     }
     public  static Map<String,Object> patchBookingPayload(){
         Map<String,Object> payload = new HashMap<>();
-        payload.put("firstname","swati");
-        payload.put("lastname","shukla");
-        payload.put("totalprice",5000);
+        payload.put("firstname",faker.name().firstName());
+        payload.put("lastname",faker.name().lastName());
+        payload.put("totalprice",faker.number().numberBetween(1,1000));
         return payload;
     }
 }

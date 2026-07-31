@@ -1,14 +1,12 @@
 import builders.BookingDataBuilder;
 import io.restassured.response.Response;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-import pojo.BookingDates;
 import pojo.BookingRequest;
 import pojo.BookingResponse;
 import services.BookingService;
+import utils.AssertionHelper;
 import utils.TestData;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class CreateBookingTest {
@@ -17,18 +15,25 @@ public class CreateBookingTest {
 
     @Test
     public void createBookingTest() {
-        BookingRequest requestPayload = BookingDataBuilder.defaultBooking();
+
+        BookingRequest requestPayload =
+                BookingDataBuilder.defaultBooking();
+
         BookingResponse bookingResponse =
                 bookingService.createBooking(requestPayload);
 
-        int bookingId = bookingResponse.getBookingid();
+        AssertionHelper.verifyTrue(
+                bookingResponse.getBookingid() > 0,
+                "Booking Id was not generated");
 
-        Assert.assertTrue(bookingId > 0,
-                "Booking ID was not generated");
+        TestData.setBookingId(
+                bookingResponse.getBookingid());
 
-        TestData.setBookingId(bookingId);
+        // Save expected request for next tests
+        TestData.setBooking(requestPayload);
 
-        System.out.println("Booking Id -> " + bookingId);
+        System.out.println("Booking Created -> "
+                + bookingResponse.getBookingid());
     }
 
     @Test(dependsOnMethods = "createBookingTest")
@@ -36,44 +41,50 @@ public class CreateBookingTest {
 
         int bookingId = TestData.getBookingId();
 
-        BookingRequest response =
+        BookingRequest actualBooking =
                 bookingService.getBookingRequest(bookingId);
 
-        Assert.assertEquals(response.getFirstname(), "Anurag");
-        Assert.assertEquals(response.getLastname(), "Pandey");
-        Assert.assertEquals(response.getTotalprice(), 1200);
-        Assert.assertTrue(response.isDepositpaid());
-        Assert.assertEquals(response.getBookingdates().getCheckin(), "2026-12-10");
-        Assert.assertEquals(response.getBookingdates().getCheckout(), "2026-12-12");
-        Assert.assertEquals(response.getAdditionalneeds(), "Breakfast");
+        BookingRequest expectedBooking =
+                TestData.getBooking();
+
+        AssertionHelper.verifyBooking(
+                actualBooking,
+                expectedBooking);
+
+        System.out.println("Booking Fetched Successfully -> "
+                + bookingId);
     }
 
     @Test(dependsOnMethods = "getBookingTest")
     public void updateBookingTest() {
 
         int bookingId = TestData.getBookingId();
-        BookingRequest updatedRequest = BookingDataBuilder.updatedBooking();
-        BookingRequest updatedResponse =
-                bookingService.updateBooking(bookingId, updatedRequest);
 
-        Assert.assertEquals(updatedResponse.getFirstname(), "Rahul");
-        Assert.assertEquals(updatedResponse.getLastname(), "Sharma");
-        Assert.assertEquals(updatedResponse.getTotalprice(), 5000);
-        Assert.assertFalse(updatedResponse.isDepositpaid());
-        Assert.assertEquals(updatedResponse.getBookingdates().getCheckin(), "2026-12-20");
-        Assert.assertEquals(updatedResponse.getBookingdates().getCheckout(), "2026-12-25");
-        Assert.assertEquals(updatedResponse.getAdditionalneeds(), "Lunch");
+        BookingRequest updatedRequest =
+                BookingDataBuilder.updatedBooking();
+
+        BookingRequest updatedResponse =
+                bookingService.updateBooking(
+                        bookingId,
+                        updatedRequest);
+
+        AssertionHelper.verifyBooking(
+                updatedResponse,
+                updatedRequest);
+
+        // Update expected object
+        TestData.setBooking(updatedRequest);
 
         BookingRequest getResponse =
-                bookingService.getBookingRequest(bookingId);
+                bookingService.getBookingRequest(
+                        bookingId);
 
-        Assert.assertEquals(getResponse.getFirstname(), "Rahul");
-        Assert.assertEquals(getResponse.getLastname(), "Sharma");
-        Assert.assertEquals(getResponse.getTotalprice(), 5000);
-        Assert.assertFalse(getResponse.isDepositpaid());
-        Assert.assertEquals(getResponse.getAdditionalneeds(), "Lunch");
+        AssertionHelper.verifyBooking(
+                getResponse,
+                updatedRequest);
 
-        System.out.println("Booking Updated Successfully -> " + bookingId);
+        System.out.println("Booking Updated Successfully -> "
+                + bookingId);
     }
 
     @Test(dependsOnMethods = "updateBookingTest")
@@ -81,46 +92,111 @@ public class CreateBookingTest {
 
         int bookingId = TestData.getBookingId();
 
-       Map<String,Object> payload=BookingDataBuilder.patchBookingPayload();
+        Map<String, Object> payload =
+                BookingDataBuilder.patchBookingPayload();
 
         BookingRequest patchResponse =
-                bookingService.patchBooking(bookingId, payload);
+                bookingService.patchBooking(
+                        bookingId,
+                        payload);
 
-        Assert.assertEquals(patchResponse.getFirstname(), "Swati");
-        Assert.assertEquals(patchResponse.getLastname(), "Shukla");
-        Assert.assertEquals(patchResponse.getTotalprice(), 5000);
+        AssertionHelper.verifyEquals(
+                patchResponse.getFirstname(),
+                payload.get("firstname"),
+                "Firstname mismatch");
+
+        AssertionHelper.verifyEquals(
+                patchResponse.getLastname(),
+                payload.get("lastname"),
+                "Lastname mismatch");
+
+        AssertionHelper.verifyEquals(
+                patchResponse.getTotalprice(),
+                payload.get("totalprice"),
+                "Totalprice mismatch");
 
         BookingRequest getResponse =
-                bookingService.getBookingRequest(bookingId);
+                bookingService.getBookingRequest(
+                        bookingId);
 
-        Assert.assertEquals(getResponse.getFirstname(), "Swati");
-        Assert.assertEquals(getResponse.getLastname(), "Shukla");
-        Assert.assertEquals(getResponse.getTotalprice(), 5000);
+        AssertionHelper.verifyEquals(
+                getResponse.getFirstname(),
+                payload.get("firstname"),
+                "Firstname mismatch");
 
-        // Fields not patched should remain unchanged
-        Assert.assertFalse(getResponse.isDepositpaid());
-        Assert.assertEquals(getResponse.getBookingdates().getCheckin(), "2026-12-20");
-        Assert.assertEquals(getResponse.getBookingdates().getCheckout(), "2026-12-25");
-        Assert.assertEquals(getResponse.getAdditionalneeds(), "Lunch");
+        AssertionHelper.verifyEquals(
+                getResponse.getLastname(),
+                payload.get("lastname"),
+                "Lastname mismatch");
 
-        System.out.println("Booking Patched Successfully -> " + bookingId);
+        AssertionHelper.verifyEquals(
+                getResponse.getTotalprice(),
+                payload.get("totalprice"),
+                "Totalprice mismatch");
+
+        // Verify unchanged fields
+        BookingRequest expectedBooking =
+                TestData.getBooking();
+
+        AssertionHelper.verifyEquals(
+                getResponse.isDepositpaid(),
+                expectedBooking.isDepositpaid(),
+                "DepositPaid mismatch");
+
+        AssertionHelper.verifyEquals(
+                getResponse.getBookingdates().getCheckin(),
+                expectedBooking.getBookingdates().getCheckin(),
+                "Checkin mismatch");
+
+        AssertionHelper.verifyEquals(
+                getResponse.getBookingdates().getCheckout(),
+                expectedBooking.getBookingdates().getCheckout(),
+                "Checkout mismatch");
+
+        AssertionHelper.verifyEquals(
+                getResponse.getAdditionalneeds(),
+                expectedBooking.getAdditionalneeds(),
+                "AdditionalNeeds mismatch");
+
+        // Update expected object
+        expectedBooking.setFirstname(
+                (String) payload.get("firstname"));
+        expectedBooking.setLastname(
+                (String) payload.get("lastname"));
+        expectedBooking.setTotalprice(
+                (Integer) payload.get("totalprice"));
+
+        TestData.setBooking(expectedBooking);
+
+        System.out.println("Booking Patched Successfully -> "
+                + bookingId);
     }
-    @Test (dependsOnMethods = "patchBookingTest")
+
+    @Test(dependsOnMethods = "patchBookingTest")
     public void deleteBookingTest() {
 
         int bookingId = TestData.getBookingId();
 
-        Response response = bookingService.deleteBooking(bookingId);
+        Response response =
+                bookingService.deleteBooking(
+                        bookingId);
 
-        Assert.assertEquals(response.statusCode(), 201);
-
-        System.out.println("Booking Deleted Successfully -> " + bookingId);
+        AssertionHelper.verifyStatusCode(
+                response.statusCode(),
+                201);
 
         try {
-            bookingService.getBookingRequest(bookingId);
-            Assert.fail("Booking still exists after delete.");
+
+            bookingService.getBookingRequest(
+                    bookingId);
+
+            AssertionHelper.fail(
+                    "Booking still exists after delete.");
+
         } catch (IllegalStateException e) {
-            System.out.println("Booking deleted successfully. GET returned expected error.");
+
+            System.out.println(
+                    "Booking deleted successfully.");
         }
     }
 }
