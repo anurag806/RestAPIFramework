@@ -6,12 +6,11 @@ import pojo.BookingResponse;
 import services.BookingService;
 import utils.AssertionHelper;
 import utils.TestData;
-
 import java.util.Map;
 
-public class CreateBookingTest {
+public class CreateBookingTest extends  BaseTest {
 
-    BookingService bookingService = new BookingService();
+
 
     @Test
     public void createBookingTest() {
