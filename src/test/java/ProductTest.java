@@ -8,6 +8,8 @@ import services.ProductService;
 import utils.AssertionHelper;
 import java.util.List;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
 public class ProductTest extends BaseTest {
 
     @Test
@@ -36,7 +38,9 @@ public class ProductTest extends BaseTest {
     public void getProductById(int productId) {
 
         ProductService productService = new ProductService();
-
+        Response response=productService.getProductByIdResponse(productId);
+        response.then().assertThat()
+                .body(matchesJsonSchemaInClasspath("schemas/product-schema.json"));
         ProductResponse product =
                 productService.getProductById(productId);
 

@@ -122,4 +122,12 @@ public class ProductService  extends  BaseService{
             );
         }
     }
+    public Response getProductByIdResponse(int id){
+        return given()
+                .spec(requestSpecification)
+                .pathParam("id", id)
+                .log().all()
+                .when()
+                .get(Routes.PRODUCT_BY_ID);
+    }
 }

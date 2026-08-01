@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.anurag</groupId>
-    <artifactId>spotify-api-framework</artifactId>
+    <artifactId>restassured-api-framework</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
