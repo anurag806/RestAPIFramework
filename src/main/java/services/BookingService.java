@@ -8,9 +8,7 @@ import pojo.BookingRequest;
 import pojo.BookingResponse;
 import routes.Routes;
 import specifications.RequestSpecFactory;
-
 import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 
 public class BookingService extends BaseService {
