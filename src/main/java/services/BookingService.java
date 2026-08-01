@@ -1,5 +1,6 @@
 package services;
 import auth.TokenManager;
+import config.ConfigManager;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,11 +16,14 @@ import static io.restassured.RestAssured.given;
 public class BookingService extends BaseService {
     private static final Logger logger =
             LogManager.getLogger(BookingService.class);
+    public BookingService() {
+        requestSpecification=RequestSpecFactory.getRequestSpecification(ConfigManager.getProperty("booker.base.url"));
+    }
 
     public BookingResponse createBooking(BookingRequest bookingRequest) {
 
         Response response = given()
-                .spec(RequestSpecFactory.getRequestSpecification())
+                .spec(requestSpecification)
                 .body(bookingRequest)
                 .log().all()
                 .when()
@@ -39,7 +43,7 @@ logger.info("booking request created");
     }
 
     public BookingRequest getBookingRequest(int bookingid) {
-        Response response1 = given().spec(RequestSpecFactory.getRequestSpecification())
+        Response response1 = given().spec(requestSpecification)
                 .pathParam("id", bookingid).log().all()
                 .when().get(Routes.GET_BOOKING);
         logger.info("booking request getting");
@@ -54,7 +58,7 @@ logger.info("booking request created");
         }
     }
     public BookingRequest updateBooking(int BookingId,BookingRequest bookingRequest) {
-        Response response=given().spec(RequestSpecFactory.getRequestSpecification())
+        Response response=given().spec(requestSpecification)
                 .pathParam("id",BookingId)
                 .header("Cookie","token="+ TokenManager.getToken())
                 .body(bookingRequest)
@@ -72,7 +76,7 @@ logger.info("booking request created");
         }
     }
     public  BookingRequest patchBooking(int BookingId, Map<String,Object> Payload){
-        Response response=given().spec(RequestSpecFactory.getRequestSpecification())
+        Response response=given().spec(requestSpecification)
                 .pathParam("id",BookingId)
                 .header("Cookie","token="+TokenManager.getToken())
                 .body(Payload).log().all().when().patch(Routes.UPDATE_BOOKING);
@@ -90,7 +94,7 @@ logger.info("booking request created");
     }
 }
 public Response deleteBooking(int BookingId){
-        Response response=given().spec(RequestSpecFactory.getRequestSpecification())
+        Response response=given().spec(requestSpecification)
                 .header("Cookie","token="+TokenManager.getToken())
                 .pathParam("id",BookingId).log().all().when().delete(Routes.DELETE_BOOKING);
     logger.info("booking request deleting");

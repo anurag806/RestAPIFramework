@@ -8,9 +8,9 @@ public class RequestSpecFactory {
 
     private RequestSpecFactory() {}
 
-    public static RequestSpecification getRequestSpecification() {
+    public static RequestSpecification getRequestSpecification(String baseUrl) {
         return new RequestSpecBuilder()
-                .setBaseUri(ConfigManager.getProperty("base.url"))
+                .setBaseUri(baseUrl)
                 .setContentType(ContentType.JSON)
                 // Explicit clean Accept header to bypass bot/Cloudflare checks
                 .addHeader("Accept", "application/json")
