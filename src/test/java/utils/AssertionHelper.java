@@ -2,6 +2,8 @@ package utils;
 
 import org.testng.Assert;
 import pojo.BookingRequest;
+import pojo.ProductRequest;
+import pojo.ProductResponse;
 
 public class AssertionHelper {
 
@@ -64,5 +66,16 @@ public class AssertionHelper {
 
     public static void fail(String message) {
         Assert.fail(message);
+    }
+    public static void verifyProduct(ProductResponse actual, ProductRequest expected) {
+        Assert.assertEquals(actual.getTitle(),expected.getTitle());
+        Assert.assertEquals(actual.getDescription(),expected.getDescription());
+        Assert.assertEquals(actual.getCategory(),expected.getCategory());
+        Assert.assertEquals(actual.getPrice(),expected.getPrice());
+        Assert.assertEquals(actual.getImage(),expected.getImage());
+
+    }
+    public  static void verifyNotNull(Object actual, String message) {
+        Assert.assertNotNull(actual, message);
     }
 }

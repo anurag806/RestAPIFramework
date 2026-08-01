@@ -21,8 +21,8 @@ public class AuthService extends BaseService {
 
         // Create authentication request payload
         AuthRequest authRequest = new AuthRequest(
-                ConfigManager.getProperty("username"),
-                ConfigManager.getProperty("password")
+                ConfigManager.getProperty("booker.username"),
+                ConfigManager.getProperty("booker.password")
         );
 
         // Send POST request to /auth
@@ -31,6 +31,8 @@ public class AuthService extends BaseService {
                 .body(authRequest)
                 .when()
                 .post(Routes.AUTH);
+
+        response.then().log().all();
 
         // Convert JSON response to AuthResponse POJO
         return response.as(AuthResponse.class);
