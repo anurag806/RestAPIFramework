@@ -41,4 +41,20 @@ public void addProduct() {
 
 }
 
+    @Test
+    public void updateProductTest() {
+
+        ProductService productService = new ProductService();
+
+        ProductRequest request = ProductDataBuilder.updatedProduct();
+
+        ProductResponse response =
+                productService.updateProduct(1, request);
+
+        Assert.assertEquals(response.getTitle(), request.getTitle());
+        Assert.assertEquals(response.getPrice(), request.getPrice());
+        Assert.assertEquals(response.getCategory(), request.getCategory());
+        Assert.assertEquals(response.getDescription(), request.getDescription());
+        Assert.assertEquals(response.getImage(), request.getImage());
+    }
 }

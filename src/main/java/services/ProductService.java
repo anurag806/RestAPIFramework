@@ -74,4 +74,30 @@ public class ProductService  extends  BaseService{
             );
         }
     }
+    public ProductResponse updateProduct(int productId, ProductRequest productRequest) {
+
+        Response response = given()
+                .spec(requestSpecification)
+                .pathParam("id", productId)
+                .body(productRequest)
+                .log().all()
+                .when()
+                .put(Routes.PRODUCT_BY_ID);
+
+        logger.info("Updating Product with id : {}", productId);
+
+        if (response.statusCode() == 200) {
+
+            return response.as(ProductResponse.class);
+
+        } else {
+
+            throw new IllegalStateException(
+                    "Update Product failed with status "
+                            + response.statusCode()
+                            + " Response : "
+                            + response.asString()
+            );
+        }
+    }
 }
