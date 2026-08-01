@@ -1,4 +1,5 @@
 import builders.ProductDataBuilder;
+import dataproviders.ProductDataProvider;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -20,10 +21,11 @@ public class ProductTest extends BaseTest {
 
         System.out.println(products.get(0).getTitle());
     }
-    @Test
-    public void getProductById() {
+    @Test (dataProvider = "productIds",dataProviderClass = ProductDataProvider.class)
+    public void getProductById(int productId) {
+
         ProductService productService = new ProductService();
-        ProductResponse product = productService.getProductById(1);
+        ProductResponse product = productService.getProductById(productId);
         System.out.println(product.getTitle());
     }
 @Test
