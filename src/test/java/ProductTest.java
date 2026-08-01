@@ -16,5 +16,11 @@ public class ProductTest extends BaseTest {
 
         System.out.println(products.get(0).getTitle());
     }
+    @Test
+    public void getProductById() {
+        ProductService productService = new ProductService();
+        ProductResponse product = productService.getProductById(1);
+        System.out.println(product.getTitle());
+    }
 
 }

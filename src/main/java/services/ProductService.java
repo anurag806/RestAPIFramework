@@ -45,4 +45,16 @@ public class ProductService  extends  BaseService{
             );
         }
     }
+    public ProductResponse getProductById(int id)
+    {
+        Response response=given().spec(requestSpecification).pathParam("id",id)
+                .log().all()
+                .when().get(Routes.PRODUCT_BY_ID);
+        if (response.statusCode() == 200) {
+            return response.as(ProductResponse.class);
+        }
+        else  {
+            throw new IllegalStateException( response.statusCode() + " Response : ");
+        }
+    }
 }
