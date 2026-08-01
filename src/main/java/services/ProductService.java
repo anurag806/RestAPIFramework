@@ -1,10 +1,10 @@
 package services;
-
 import config.ConfigManager;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pojo.ProductRequest;
 import pojo.ProductResponse;
 import routes.Routes;
 import specifications.RequestSpecFactory;
@@ -55,6 +55,23 @@ public class ProductService  extends  BaseService{
         }
         else  {
             throw new IllegalStateException( response.statusCode() + " Response : ");
+        }
+    }
+    public ProductResponse createProduct(ProductRequest productRequest)
+    {
+
+        Response response=given().spec(requestSpecification).body(productRequest).when().post(Routes.PRODUCTS);
+        logger.info("Creating Product");
+        if (response.statusCode() == 200 || response.statusCode() == 201) {
+            return response.as(ProductResponse.class);
+        }
+        else  {
+            throw new IllegalStateException(
+                    "Create Product failed with status "
+                            + response.statusCode()
+                            + " Response : "
+                            + response.asString()
+            );
         }
     }
 }
