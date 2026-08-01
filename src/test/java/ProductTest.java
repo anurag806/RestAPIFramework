@@ -1,4 +1,5 @@
 import builders.ProductDataBuilder;
+import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pojo.ProductRequest;
@@ -56,5 +57,14 @@ public void addProduct() {
         Assert.assertEquals(response.getCategory(), request.getCategory());
         Assert.assertEquals(response.getDescription(), request.getDescription());
         Assert.assertEquals(response.getImage(), request.getImage());
+    }
+    @Test
+    public void deleteProductTest() {
+
+        ProductService productService = new ProductService();
+
+        Response response = productService.deleteProduct(1);
+
+        Assert.assertEquals(response.statusCode(), 200);
     }
 }

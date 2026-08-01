@@ -1,7 +1,5 @@
 package pojo;
-
 public class ProductResponse {
-
         private int id;
         private String title;
         private double price;
@@ -54,5 +52,4 @@ public class ProductResponse {
     public void setRating(Rating rating) {
         this.rating = rating;
     }
-    }
-
+}

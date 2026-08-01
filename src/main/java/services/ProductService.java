@@ -100,4 +100,26 @@ public class ProductService  extends  BaseService{
             );
         }
     }
+    public Response deleteProduct(int productId) {
+
+        Response response = given()
+                .spec(requestSpecification)
+                .pathParam("id", productId)
+                .log().all()
+                .when()
+                .delete(Routes.PRODUCT_BY_ID);
+
+        logger.info("Deleting Product with id : {}", productId);
+
+        if (response.statusCode() == 200) {
+            return response;
+        } else {
+            throw new IllegalStateException(
+                    "Delete Product failed with status "
+                            + response.statusCode()
+                            + " Response : "
+                            + response.asString()
+            );
+        }
+    }
 }
