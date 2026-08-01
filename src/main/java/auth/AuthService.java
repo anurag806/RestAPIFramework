@@ -12,6 +12,11 @@ import static io.restassured.RestAssured.given;
 
 public class AuthService extends BaseService {
 
+    public AuthService() {
+        requestSpecification = RequestSpecFactory.getRequestSpecification(
+                ConfigManager.getProperty("booker.base.url"));
+    }
+
     public AuthResponse generateToken() {
 
         // Create authentication request payload
@@ -22,7 +27,7 @@ public class AuthService extends BaseService {
 
         // Send POST request to /auth
         response = given()
-                .spec(RequestSpecFactory.getRequestSpecification())
+                .spec(requestSpecification)
                 .body(authRequest)
                 .when()
                 .post(Routes.AUTH);

@@ -15,7 +15,6 @@ public class BookingDataBuilder {
                 "2026-12-10",
                 "2026-12-12"
         );
-
         BookingRequest bookingRequest = new BookingRequest();
 
         bookingRequest.setFirstname(faker.name().firstName());
