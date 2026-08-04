@@ -12,7 +12,7 @@ public class CreateBookingTest extends  BaseTest {
 
 
 
-    @Test
+    @Test(groups = "Booking")
     public void createBookingTest() {
 
         BookingRequest requestPayload =
@@ -35,7 +35,7 @@ public class CreateBookingTest extends  BaseTest {
                 + bookingResponse.getBookingid());
     }
 
-    @Test(dependsOnMethods = "createBookingTest")
+    @Test(dependsOnMethods = "createBookingTest",groups = "Booking")
     public void getBookingTest() {
 
         int bookingId = TestData.getBookingId();
@@ -54,7 +54,7 @@ public class CreateBookingTest extends  BaseTest {
                 + bookingId);
     }
 
-    @Test(dependsOnMethods = "getBookingTest")
+    @Test(dependsOnMethods = "getBookingTest",groups = "Booking")
     public void updateBookingTest() {
 
         int bookingId = TestData.getBookingId();
@@ -86,7 +86,7 @@ public class CreateBookingTest extends  BaseTest {
                 + bookingId);
     }
 
-    @Test(dependsOnMethods = "updateBookingTest")
+    @Test(dependsOnMethods = "updateBookingTest",groups = "Booking")
     public void patchBookingTest() {
 
         int bookingId = TestData.getBookingId();
@@ -171,7 +171,7 @@ public class CreateBookingTest extends  BaseTest {
                 + bookingId);
     }
 
-    @Test(dependsOnMethods = "patchBookingTest")
+    @Test(dependsOnMethods = "patchBookingTest",groups = "Booking")
     public void deleteBookingTest() {
 
         int bookingId = TestData.getBookingId();

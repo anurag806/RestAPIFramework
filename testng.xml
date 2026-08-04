@@ -3,8 +3,14 @@
 <suite name="All Test Suite">
     <test verbose="2" preserve-order="true"
           name="C:/Users/anura/OneDrive/Desktop/SDET/RESTAPIFRAMEWORK">
+        <groups>
+            <run>
+                <include name="Booking"/>
+            </run>
+        </groups>
         <classes>
-            <class name="CreateBookingTest"></class>
+            <class name="CreateBookingTest">
+            </class>
             <class name="ProductTest"></class>
         </classes>
 

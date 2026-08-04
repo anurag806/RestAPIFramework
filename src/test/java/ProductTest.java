@@ -12,7 +12,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 
 public class ProductTest extends BaseTest {
 
-    @Test
+    @Test(groups = "Faker")
     public void getAllProduct() {
 
         ProductService productService = new ProductService();
@@ -33,7 +33,7 @@ public class ProductTest extends BaseTest {
                 "Product title should not be null");
     }
 
-    @Test(dataProvider = "productIds",
+    @Test(dataProvider = "productIds",groups = "Faker",
             dataProviderClass = ProductDataProvider.class)
     public void getProductById(int productId) {
 
@@ -58,7 +58,7 @@ public class ProductTest extends BaseTest {
                 "Category should not be null");
     }
 
-    @Test
+    @Test(groups = "Faker")
     public void addProduct() {
 
         ProductService productService = new ProductService();
@@ -78,7 +78,7 @@ public class ProductTest extends BaseTest {
                 request);
     }
 
-    @Test
+    @Test(groups = "Faker")
     public void updateProductTest() {
 
         ProductService productService = new ProductService();
@@ -94,7 +94,7 @@ public class ProductTest extends BaseTest {
                 request);
     }
 
-    @Test
+    @Test(groups = "Faker")
     public void deleteProductTest() {
 
         ProductService productService =
